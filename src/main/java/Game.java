@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Game {
     Screen screen;
-
+    Hero hero = new Hero(10, 10);
     public Game(){
         try {
 
@@ -32,7 +32,7 @@ public class Game {
 
     private void draw() throws IOException {
         screen.clear();
-        screen.setCharacter(x, y, TextCharacter.fromCharacter('X')[0]);
+        hero.draw(screen);
         screen.refresh();
 
     }
@@ -49,22 +49,21 @@ public class Game {
     private void processKey(KeyStroke key) throws IOException {
         System.out.println(key);
         if (key.getKeyType() == KeyType.ArrowUp){
-            y = y-1;
+            hero.moveUp();
         }
         if (key.getKeyType() == KeyType.ArrowLeft){
-            x = x-1;
+            hero.moveLeft();
         }  if (key.getKeyType() == KeyType.ArrowRight){
-            x = x+1;
+            hero.moveRight();
         }  if (key.getKeyType() == KeyType.ArrowDown){
-            y = y+1;
+            hero.moveDown();
         }
         if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q'){
             screen.close();
         }
 
     }
-    private int x = 10;
-    private int y = 10;
+
 }
 
 
