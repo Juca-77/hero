@@ -9,24 +9,22 @@ import com.googlecode.lanterna.terminal.Terminal;
 import java.io.IOException;
 
 public class Game {
-    Screen screen;
-    Hero hero = new Hero(10, 10);
-    public Game(){
-        try {
+    private Screen screen;
+    public Hero hero;
 
-            TerminalSize terminalSize = new TerminalSize(40, 20);
-            DefaultTerminalFactory terminalFactory = new
-                    DefaultTerminalFactory()
-                    .setInitialTerminalSize(terminalSize);
-            Terminal terminal = terminalFactory.createTerminal();
-            screen = new TerminalScreen(terminal);
-            screen.setCursorPosition(null); // we don't need a cursor
-            screen.startScreen(); // screens must be started
-            screen.doResizeIfNecessary(); // resize screen if necessary
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public Game() throws IOException{
+        hero = new Hero(10, 10);
+        TerminalSize terminalSize = new TerminalSize(40, 20);
+        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
+        Terminal terminal = terminalFactory.createTerminal();
+        screen = new TerminalScreen(terminal);
+        screen.setCursorPosition(null); // we don't need a cursor
+        screen.startScreen(); // screens must be started
+        screen.doResizeIfNecessary(); // resize screen if necessary
+        screen.clear();
+        screen.setCharacter(10, 10, TextCharacter.fromCharacter('X')[0]);
+        screen.refresh();
     }
 
 
@@ -36,32 +34,48 @@ public class Game {
         screen.refresh();
 
     }
-    public void run() throws IOException {
-        while(true){
-            draw();
-            KeyStroke key = screen.readInput();
-            processKey(key);
-            if (key.getKeyType()==KeyType.EOF){
-                break;
-            }
-        }
-    }
+
     private void processKey(KeyStroke key) throws IOException {
         System.out.println(key);
-        if (key.getKeyType() == KeyType.ArrowUp){
-            hero.moveUp();
+        if (key.getKeyType() == KeyType.ArrowUp) {
+            moveHero(hero.moveUp());
+            draw();
         }
-        if (key.getKeyType() == KeyType.ArrowLeft){
-            hero.moveLeft();
-        }  if (key.getKeyType() == KeyType.ArrowRight){
-            hero.moveRight();
-        }  if (key.getKeyType() == KeyType.ArrowDown){
-            hero.moveDown();
+        if (key.getKeyType() == KeyType.ArrowLeft) {
+            moveHero(hero.moveLeft());
+            draw();
         }
-        if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q'){
+        if (key.getKeyType() == KeyType.ArrowRight) {
+            moveHero(hero.moveRight());
+            draw();
+        }
+        if (key.getKeyType() == KeyType.ArrowDown) {
+            moveHero(hero.moveDown());
+            draw();
+        }
+        if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
             screen.close();
         }
 
+    }
+
+    private void moveHero(Position position) {
+        hero.setPosition(position);
+    }
+
+
+    public void run() throws IOException {
+        while (true) {
+            KeyStroke key = screen.readInput();
+            if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
+                screen.close();
+                break;
+            }
+            if (key.getKeyType()==KeyType.EOF) {
+                break;
+            }
+            processKey(key);
+        }
     }
 
 }
