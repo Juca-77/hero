@@ -1,4 +1,8 @@
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextCharacter;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -23,19 +27,19 @@ public class Arena {
         System.out.println(key);
         if (key.getKeyType() == KeyType.ArrowUp) {
             moveHero(hero.moveUp());
-            draw(screen);
+
         }
         if (key.getKeyType() == KeyType.ArrowLeft) {
             moveHero(hero.moveLeft());
-            draw(screen);
+
         }
         if (key.getKeyType() == KeyType.ArrowRight) {
             moveHero(hero.moveRight());
-            draw(screen);
+
         }
         if (key.getKeyType() == KeyType.ArrowDown) {
             moveHero(hero.moveDown());
-            draw(screen);
+
         }
         if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
             screen.close();
@@ -58,10 +62,11 @@ public class Arena {
             return true;
         }
     }
-    public void draw(Screen screen) throws IOException {
-        screen.clear();
-        hero.draw(screen);
-        screen.refresh();
+    public void draw(TextGraphics graphics) throws IOException {
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#590078"));
+        graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
+        hero.draw(graphics);
+
 
     }
 
