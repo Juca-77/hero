@@ -15,7 +15,8 @@ public class Game {
 
 
     public Game() throws IOException{
-        hero = new Hero(10, 10);
+        Position pos = new Position(10,10);
+        hero = new Hero(pos);
         arena = new Arena(40,20);
         arena.set_hero(hero);
         TerminalSize terminalSize = new TerminalSize(40, 20);
